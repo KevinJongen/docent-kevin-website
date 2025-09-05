@@ -48,7 +48,14 @@
 
       <section id="begrippen" class="mt-10">
         <h3 class="text-xl font-bold text-kevin-900">📖 Begrippenlijst</h3>
-        <div id="begrippenList" class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+
+        <details id="begrippenDetails" class="mt-3 rounded-xl border border-kevin-200 bg-white open:shadow-sm">
+          <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between">
+            <span class="font-semibold text-kevin-900">Toon/Verberg begrippen</span>
+            <span id="begrippenCount" class="text-xs font-semibold bg-kevin-600 text-white rounded px-2 py-0.5">0</span>
+          </summary>
+          <div id="begrippenList" class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        </details>
 
         <div class="mt-8">
           <div class="flex items-center justify-between gap-3">
@@ -74,10 +81,15 @@
       async function loadBegrippen(chNum){
         var status = document.getElementById('begrippenStatus');
         var list = document.getElementById('begrippenList');
+        var countEl = document.getElementById('begrippenCount');
+        var detailsEl = document.getElementById('begrippenDetails');
         var quiz = document.getElementById('quiz');
         var scoreEl = document.getElementById('score');
         var resetBtn = document.getElementById('resetQuiz');
         var url = '../data/hoofdstuk-' + chNum + '.xlsx';
+
+        // Start ingeklapt
+        detailsEl.removeAttribute('open');
 
         // Score state
         var score = 0;
@@ -106,6 +118,7 @@
             card.appendChild(title); card.appendChild(desc);
             list.appendChild(card);
           });
+          countEl.textContent = items.length;
 
           // Quiz (max 10 vragen) — per-vraag feedback en score
           quiz.innerHTML = '';
@@ -135,7 +148,6 @@
               input.addEventListener('change', function(){
                 if (opt === correct.uitleg) {
                   fb.textContent='✅ Goed!'; fb.className='mt-1 text-xs text-green-700';
-                  // lock vraag (disable radios) en tel score 1x
                   if (!counted) { score += 1; counted = true; updateScore(); }
                   const radios = div.querySelectorAll('input[type="radio"]');
                   radios.forEach(function(r){ r.disabled = true; });
@@ -149,15 +161,14 @@
           }
 
           // Reset quiz (reshuffle)
-          resetBtn.onclick = function(){
-            loadBegrippen(chNum);
-          };
+          resetBtn.onclick = function(){ loadBegrippen(chNum); };
 
           status.textContent = 'Ingeladen uit Excel (' + items.length + ' begrippen).';
         } catch(err) {
           status.textContent = 'Geen Excel gevonden voor dit hoofdstuk. (Zet een bestand in /data/hoofdstuk-__N__.xlsx met kolommen "Begrip" en "Uitleg".)';
-          quiz.innerHTML = '';
           list.innerHTML = '';
+          document.getElementById('begrippenCount').textContent = '0';
+          quiz.innerHTML = '';
           score = 0; total = 0; updateScore();
           resetBtn.onclick = function(){ loadBegrippen(chNum); };
         }
