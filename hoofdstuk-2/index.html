@@ -4,12 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hoofdstuk 2 — Inzoomen en uitzoomen | Meneer Jongen</title>
-    <meta name="description" content="Eerste podcast-aflevering (2.2), GPT en begrippenlijst." />
+    <meta name="description" content="Eerste podcast-aflevering (2.2), GPT en begrippenlijst (Excel)." />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = { theme: { extend: { colors: { kevin: { 50:'#f1fdf4',100:'#e3fbe9',200:'#c1f4d1',300:'#92e9b3',400:'#5bdc93',500:'#2fcf77',600:'#1fa962',700:'#1a8550',800:'#166944',900:'#0f4a32' }}}}};
     </script>
     <style>.grid-bg{background-image:radial-gradient(rgba(255,255,255,.15) 1px,transparent 1px);background-size:16px 16px;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   </head>
 
   <body class="min-h-screen bg-gradient-to-b from-kevin-100 via-kevin-50 to-white grid-bg">
@@ -29,8 +30,8 @@
 
       <section id="podcast" class="mt-8">
         <h3 class="text-xl font-bold text-kevin-900 mb-2">🎧 Start hier: 2.2</h3>
-        <div id="first-episode" class="rounded-xl overflow-hidden border border-kevin-200 bg-white">
-          <iframe id="firstEmbed" style="border:0" width="100%" height="232" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" src="https://open.spotify.com/embed/show/0meYrg7vp9bzt0TKTEOO92"></iframe>
+        <div class="rounded-xl overflow-hidden border border-kevin-200 bg-white">
+          <iframe style="border:0" width="100%" height="232" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" src="https://open.spotify.com/embed/show/0meYrg7vp9bzt0TKTEOO92"></iframe>
         </div>
       </section>
 
@@ -47,17 +48,13 @@
 
       <section id="begrippen" class="mt-10">
         <h3 class="text-xl font-bold text-kevin-900">📖 Begrippenlijst</h3>
-        <div class="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-kevin-800/90">
-          <span>Genotype</span><span>Fenotype</span>
-          <span>Allelen</span><span>Dominant/Recessief</span>
-          <span>Homo-/Heterozygoot</span><span>Kruisschema</span>
-          <span>Meiose</span><span>Mutatie</span>
-          <span>Natuurlijke selectie</span><span>Soortvorming</span>
-        </div>
-        <div class="mt-6">
+        <div id="begrippenList" class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+
+        <div class="mt-8">
           <h4 class="font-bold text-kevin-900 mb-2">Oefen jezelf</h4>
           <div id="quiz" class="space-y-3"></div>
         </div>
+        <p id="begrippenStatus" class="mt-3 text-sm text-kevin-800/70"></p>
       </section>
     </main>
 
@@ -67,24 +64,67 @@
 
     <script>
       document.getElementById('year').textContent = new Date().getFullYear();
-      const quizData = [
-        { q:'Wat is het genotype?', options:['Buitenkant','Erfelijke info in DNA','Mutatie'], correct:1 },
-        { q:'Welke combinatie is homozygoot?', options:['Aa','AA','aA'], correct:1 }
-      ];
-      const quizContainer=document.getElementById('quiz');
-      quizData.forEach((item,i)=>{
-        const div=document.createElement('div');
-        div.className='p-3 border rounded-lg bg-white';
-        const p=document.createElement('p'); p.textContent=`${i+1}. ${item.q}`; div.appendChild(p);
-        item.options.forEach((opt,j)=>{
-          const label=document.createElement('label'); label.className='block mt-1 text-sm';
-          const input=document.createElement('input'); input.type='radio'; input.name=`q${i}`; input.value=j; input.className='mr-2';
-          label.appendChild(input); label.append(opt); div.appendChild(label);
-        });
-        const feedback=document.createElement('div'); feedback.className='mt-1 text-xs'; div.appendChild(feedback);
-        div.addEventListener('change',e=>{const val=parseInt(e.target.value); if(val===item.correct){feedback.textContent='✅ Goed!'; feedback.className='mt-1 text-xs text-green-700';} else {feedback.textContent='❌ Fout, probeer opnieuw.'; feedback.className='mt-1 text-xs text-red-700';}});
-        quizContainer.appendChild(div);
-      });
+
+      async function loadBegrippen(chNum){
+        var status = document.getElementById('begrippenStatus');
+        var list = document.getElementById('begrippenList');
+        var quiz = document.getElementById('quiz');
+        var url = '../data/hoofdstuk-' + chNum + '.xlsx';
+
+        try {
+          var res = await fetch(url);
+          if(!res.ok) throw new Error('Bestand niet gevonden');
+          var buf = await res.arrayBuffer();
+          var workbook = XLSX.read(buf, { type: 'array' });
+          var sheetName = workbook.SheetNames[0];
+          var sheet = workbook.Sheets[sheetName];
+          var rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+          var items = rows.filter(function(r){ return r['Begrip'] && r['Uitleg']; })
+                          .map(function(r){ return { begrip: r['Begrip'], uitleg: r['Uitleg'] }; });
+
+          // Render lijst
+          list.innerHTML = '';
+          items.forEach(function(it){
+            var card = document.createElement('div');
+            card.className = 'p-4 rounded-xl border border-kevin-200 bg-white';
+            var title = document.createElement('div'); title.className='font-semibold text-kevin-900'; title.textContent = it.begrip;
+            var desc = document.createElement('div'); desc.className='text-kevin-800/80 text-sm mt-1'; desc.textContent = it.uitleg;
+            card.appendChild(title); card.appendChild(desc);
+            list.appendChild(card);
+          });
+
+          // Quiz (max 10 vragen)
+          quiz.innerHTML = '';
+          var n = Math.min(10, items.length);
+          function shuffle(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t;} return a; }
+          var pool = items.slice();
+          for(var i=0;i<n;i++){ 
+            var correct = pool[i];
+            var distractors = shuffle(items.filter(function(it){return it !== correct;})).slice(0,2).map(function(it){return it.uitleg;});
+            var options = shuffle([correct.uitleg].concat(distractors));
+            var div = document.createElement('div'); div.className='p-3 border rounded-lg bg-white';
+            var p = document.createElement('p'); p.textContent = (i+1) + '. Wat hoort bij "' + correct.begrip + '"?'; div.appendChild(p);
+            var fb = document.createElement('div'); fb.className='mt-1 text-xs'; div.appendChild(fb);
+            options.forEach(function(opt, j){
+              var label=document.createElement('label'); label.className='block mt-1 text-sm';
+              var input=document.createElement('input'); input.type='radio'; input.name='q'+i; input.value=opt; input.className='mr-2';
+              label.appendChild(input); label.appendChild(document.createTextNode(opt)); div.insertBefore(label, fb);
+            });
+            div.addEventListener('change', function(e){
+              if(e.target && e.target.value === correct.uitleg){ fb.textContent='✅ Goed!'; fb.className='mt-1 text-xs text-green-700'; }
+              else { fb.textContent='❌ Fout, probeer opnieuw.'; fb.className='mt-1 text-xs text-red-700'; }
+            });
+            quiz.appendChild(div);
+          }
+
+          status.textContent = 'Ingeladen uit Excel (' + items.length + ' begrippen).';
+        } catch(err) {
+          status.textContent = 'Geen Excel gevonden voor dit hoofdstuk. (Zet een bestand in /data/hoofdstuk-__N__.xlsx met kolommen "Begrip" en "Uitleg".)';
+        }
+      }
+
+      loadBegrippen(2);
     </script>
   </body>
 </html>
