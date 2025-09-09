@@ -3,179 +3,115 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Startpagina | Meneer Jongen</title>
-    <meta name="description" content="Kies je hoofdstuk en vind podcasts, GPT en begrippenlijst per hoofdstuk." />
+    <title>Biologie — Meneer Jongen</title>
+    <meta name="description" content="Kies je hoofdstuk en vind podcasts, je GPT-docent en een begrippen-quiz." />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      tailwind.config = { theme: { extend: { colors: { kevin: { 50:'#f1fdf4',100:'#e3fbe9',200:'#c1f4d1',300:'#92e9b3',400:'#5bdc93',500:'#2fcf77',600:'#1fa962',700:'#1a8550',800:'#166944',900:'#0f4a32' }}}}};
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              kevin: {
+                50:'#f1fdf4',100:'#e3fbe9',200:'#c1f4d1',300:'#92e9b3',
+                400:'#5bdc93',500:'#2fcf77',600:'#1fa962',700:'#1a8550',
+                800:'#166944',900:'#0f4a32'
+              }
+            },
+            boxShadow: {
+              soft: '0 10px 30px -12px rgba(16,185,129,.25)'
+            }
+          }
+        }
+      }
     </script>
-    <style>.grid-bg{background-image:radial-gradient(rgba(255,255,255,.15) 1px,transparent 1px);background-size:16px 16px;}</style>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+      .grid-bg{background-image:radial-gradient(rgba(255,255,255,.18) 1px,transparent 1px);background-size:18px 18px;}
+    </style>
   </head>
-
-  <body class="min-h-screen bg-gradient-to-b from-kevin-100 via-kevin-50 to-white grid-bg">
-    <header class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-      <div class="flex items-center gap-3">
-        <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-kevin-600 text-white font-bold shadow-md">J</span>
-        <h1 class="text-2xl font-bold text-kevin-900">Meneer Jongen</h1>
+  <body class="bg-gradient-to-b from-kevin-100 via-kevin-50 to-white">
+    <!-- Header -->
+    <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <div class="flex items-center justify-between">
+        <a href="./index.html" class="flex items-center gap-3 group">
+          <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-kevin-600 text-white font-bold shadow-md group-hover:rotate-6 transition">J</span>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-kevin-900">Meneer Jongen</h1>
+        </a>
+        <a href="https://open.spotify.com/show/0meYrg7vp9bzt0TKTEOO92" target="_blank" rel="noopener"
+           class="hidden sm:inline-flex items-center gap-2 rounded-xl bg-black text-white px-4 py-2 font-semibold shadow hover:shadow-lg transition">
+          🎧 Naar mijn Spotify
+        </a>
       </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-      <section class="mt-8 text-center">
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-kevin-900">Kies je hoofdstuk</h2>
-        <p class="mt-3 text-base sm:text-lg text-kevin-800/80">Per hoofdstuk: eerste podcast (paragraaf .2), GPT en Begrippenlijst met quiz uit Excel.</p>
-      </section>
-
-      <section class="mt-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-          <a href="./hoofdstuk-1/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">1 — Waarom biologie?</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 1.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
+    <!-- Hero -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+      <div class="relative overflow-hidden rounded-3xl bg-white grid-bg border border-kevin-200/70 shadow-soft">
+        <div class="relative p-6 sm:p-10">
+          <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6">
+            <div class="flex-1">
+              <p class="inline-flex items-center gap-2 text-sm font-semibold text-kevin-800/80 bg-kevin-100 px-3 py-1 rounded-full">🌿 Biologie • vmbo</p>
+              <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-kevin-900 leading-tight">
+                Alles voor je toets, op één plek
+              </h2>
+              <p class="mt-3 text-kevin-800/80 max-w-2xl">
+                Kies je hoofdstuk en start met de podcast, stel vragen aan je
+                <span class="font-semibold">GPT-docent</span> en oefen met de <span class="font-semibold">begrippen-quiz</span>.
+              </p>
             </div>
-          </a>
-
-          <a href="./hoofdstuk-2/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">2 — Inzoomen en uitzoomen</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 2.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="./hoofdstuk-3/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">3 — Bewegen</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 3.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="./hoofdstuk-4/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">4 — Zintuigen en hersenen</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 4.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="./hoofdstuk-5/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">5 — Planten</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 5.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="./hoofdstuk-6/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">6 — Jouw omgeving en duurzaamheid</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 6.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="./hoofdstuk-7/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">7 — Voeding en verteren</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 7.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="./hoofdstuk-8/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">8 — Hart en bloedvaten</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 8.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="./hoofdstuk-9/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">9 — Ademhalen en verbranden</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 9.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="./hoofdstuk-10/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">10 — Voortplanten en seksualiteit</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 10.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="./hoofdstuk-11/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">11 — Erfelijkheid en evolutie</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 11.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="./hoofdstuk-12/index.html" class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
-            <div class="p-1">
-              <div class="rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[120px] flex items-end shadow-inner">
-                <div class="flex items-center gap-3 text-3xl">📚</div>
-              </div>
-              <div class="p-5">
-                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">12 — Elektriciteit en magnetisme</h3>
-                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij 12.2 • 🤖 GPT • 📖 Begrippen</p>
-              </div>
-            </div>
-          </a>
-
+          </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Chapters grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <section class="mt-10">
+        <h3 class="text-xl font-bold text-kevin-900 mb-4">📚 Kies een hoofdstuk</h3>
+        <div id="chapters" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
       </section>
     </main>
+
+    <script>
+      const chapters = [
+        { n:1,  t:"Waarom biologie?",               e:"❓" },
+        { n:2,  t:"Inzoomen en uitzoomen",          e:"🔬" },
+        { n:3,  t:"Bewegen",                        e:"🏃‍♂️" },
+        { n:4,  t:"Zintuigen en hersenen",          e:"🧠" },
+        { n:5,  t:"Planten",                        e:"🌿" },
+        { n:6,  t:"Jouw omgeving en duurzaamheid",  e:"🌍" },
+        { n:7,  t:"Voeding en verteren",            e:"🥦" },
+        { n:8,  t:"Hart en bloedvaten",             e:"❤️" },
+        { n:9,  t:"Ademhalen en verbranden",        e:"🫁" },
+        { n:10, t:"Voortplanten en seksualiteit",   e:"🌸" },
+        { n:11, t:"Erfelijkheid en evolutie",       e:"🧬" },
+        { n:12, t:"Elektriciteit en magnetisme",    e:"⚡" }
+      ];
+
+      const grid = document.getElementById('chapters');
+
+      function cardTemplate(ch) {
+        return `
+          <a href="./hoofdstuk-${ch.n}/index.html"
+             class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
+            <div class="p-1">
+              <div class="relative rounded-3xl bg-gradient-to-br from-green-500 to-emerald-600 text-white p-6 min-h-[140px] flex items-center justify-center shadow-inner overflow-hidden">
+                <div class="absolute inset-0 bg-white/10 mix-blend-overlay"></div>
+                <div class="text-5xl drop-shadow-lg">${ch.e}</div>
+                <span class="absolute bottom-3 right-4 text-xs font-semibold bg-white/30 text-white px-2 py-0.5 rounded-full">Hoofdstuk ${ch.n}</span>
+              </div>
+              <div class="p-5">
+                <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">${ch.n} — ${ch.t}</h3>
+                <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij ${ch.n}.2 • 🤖 GPT-docent • 📖 Begrippen</p>
+              </div>
+            </div>
+          </a>
+        `;
+      }
+
+      function render(list) {
+        grid.innerHTML = list.map(cardTemplate).join('');
+      }
+      render(chapters);
+    </script>
   </body>
 </html>
