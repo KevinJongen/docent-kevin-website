@@ -32,7 +32,7 @@
     <!-- Header -->
     <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
       <div class="flex items-center justify-between">
-        <a href="#" class="flex items-center gap-3 group">
+        <a href="./index.html" class="flex items-center gap-3 group">
           <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-kevin-600 text-white font-bold shadow-md group-hover:rotate-6 transition">J</span>
           <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-kevin-900">Meneer Jongen</h1>
         </a>
@@ -40,6 +40,12 @@
            class="hidden sm:inline-flex items-center gap-2 rounded-xl bg-black text-white px-4 py-2 font-semibold shadow hover:shadow-lg transition">
           🎧 Naar mijn Spotify
         </a>
+      </div>
+      <!-- Mobile Spotify CTA -->
+      <div class="sm:hidden mt-3">
+        <a aria-label="Open Spotify"
+           href="https://open.spotify.com/show/0meYrg7vp9bzt0TKTEOO92" target="_blank" rel="noopener"
+           class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-black text-white px-4 py-3 font-semibold shadow hover:shadow-lg active:scale-[.99] transition">🎧 Naar mijn Spotify</a>
       </div>
     </header>
 
@@ -71,7 +77,12 @@
       </section>
     </main>
 
+    <footer class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+      <p class="text-sm text-kevin-800/70">© <span id="year"></span> Meneer Jongen</p>
+    </footer>
+
     <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
       const chapters = [
         { n:1,  t:"Waarom biologie?",               e:"❓" },
         { n:2,  t:"Inzoomen en uitzoomen",          e:"🔬" },
@@ -86,31 +97,25 @@
         { n:11, t:"Erfelijkheid en evolutie",       e:"🧬" },
         { n:12, t:"Elektriciteit en magnetisme",    e:"⚡" }
       ];
-
       const grid = document.getElementById('chapters');
-
       function cardTemplate(ch) {
         return `
           <a href="./hoofdstuk-${ch.n}/index.html"
              class="group block rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition bg-white border border-kevin-200">
             <div class="p-1">
-              <div class="relative rounded-3xl bg-gradient-to-br from-green-500 to-emerald-600 text-white p-6 min-h-[140px] flex items-center justify-center shadow-inner overflow-hidden">
+              <div class="relative rounded-3xl bg-gradient-to-br from-green-500 to-emerald-600 text-white p-5 sm:p-6 min-h-[112px] sm:min-h-[140px] flex items-center justify-center shadow-inner overflow-hidden">
                 <div class="absolute inset-0 bg-white/10 mix-blend-overlay"></div>
-                <div class="text-5xl drop-shadow-lg">${ch.e}</div>
+                <div class="text-4xl sm:text-5xl drop-shadow-lg">${ch.e}</div>
                 <span class="absolute bottom-3 right-4 text-xs font-semibold bg-white/30 text-white px-2 py-0.5 rounded-full">Hoofdstuk ${ch.n}</span>
               </div>
-              <div class="p-5">
+              <div class="p-4 sm:p-5">
                 <h3 class="text-lg sm:text-xl font-bold text-kevin-900 group-hover:underline underline-offset-4">${ch.n} — ${ch.t}</h3>
                 <p class="mt-1 text-sm text-kevin-800/80">🎧 Start bij ${ch.n}.2 • 🤖 GPT-docent • 📖 Begrippen</p>
               </div>
             </div>
-          </a>
-        `;
+          </a>`;
       }
-
-      function render(list) {
-        grid.innerHTML = list.map(cardTemplate).join('');
-      }
+      function render(list) { grid.innerHTML = list.map(cardTemplate).join(''); }
       render(chapters);
     </script>
   </body>
