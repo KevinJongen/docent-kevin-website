@@ -191,6 +191,7 @@
           // UX: terug naar begin van de begrippen-sectie en vervolgens reshuffle
           const top = document.getElementById('begrippen').offsetTop;
           window.scrollTo({ top, behavior: 'smooth' });
+          // even na het scrollen herladen
           setTimeout(() => loadBegrippen(chNum), 200);
         };
 
