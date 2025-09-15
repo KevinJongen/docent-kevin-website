@@ -67,4 +67,145 @@
       <a href="https://chatgpt.com/g/g-68bacb85ef808191ad4199cf326b4758-hoofdstuk-11-erfelijkheid-en-evolutie" target="_blank" rel="noopener"
          class="group inline-flex items-center gap-3 px-5 sm:px-6 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-base sm:text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[.99] transition">
         <svg class="h-6 w-6 sm:h-7 sm:w-7 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-          <path fill="currentColor" d="M37.532 16.87a9.963 9
+          <path fill="currentColor" d="M37.532 16.87a9.963 9.963 0 0 0-.86-8.184 10.06 10.06 0 0 0-10.854-4.886A9.967 9.967 0 0 0 9.69 5.51a10.062 10.062 0 0 0-6.006 6.995 9.967 9.967 0 0 0 2.87 9.951 10.056 10.056 0 0 0 .86 8.185 10.06 10.06 0 0 0 10.854 4.886 9.966 9.966 0 0 0 16.128-1.71 10.062 10.062 0 0 0 6.005-6.995 9.965 9.965 0 0 0-2.869-9.952Z"/>
+        </svg>
+        <span>Chat met GPT</span>
+      </a>
+    </section>
+
+    <!-- Begrippen -->
+    <section id="begrippen" class="mt-10">
+      <h3 class="text-xl font-bold text-kevin-900">📖 Begrippenlijst</h3>
+
+      <details id="begrippenDetails" class="mt-3 rounded-xl border border-kevin-200 bg-white">
+        <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between">
+          <span class="font-semibold text-kevin-900">Toon/Verberg begrippen</span>
+          <span id="begrippenCount" class="text-xs font-semibold bg-kevin-600 text-white rounded px-2 py-0.5">0</span>
+        </summary>
+        <div id="begrippenList" class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      </details>
+
+      <div class="mt-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <h4 class="font-bold text-kevin-900">Oefen jezelf</h4>
+          <div class="flex items-center gap-2 sticky top-2 z-10">
+            <span id="score" class="inline-flex items-center rounded-lg bg-kevin-600 text-white text-sm font-bold px-3 py-1 shadow">Score: 0/0</span>
+            <button id="resetQuiz" class="px-3 py-1 rounded-lg bg-white border border-kevin-300 text-kevin-900 text-sm font-semibold hover:bg-kevin-50">Opnieuw</button>
+          </div>
+        </div>
+        <div id="quiz" class="mt-3 space-y-3"></div>
+      </div>
+
+      <p id="begrippenStatus" class="mt-3 text-sm text-kevin-800/70"></p>
+    </section>
+  </main>
+
+  <footer class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+    <p>© <span id="year"></span> Meneer Jongen — Hoofdstuk 11 — Erfelijkheid en evolutie</p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    async function loadBegrippen(chNum){
+      const status = document.getElementById('begrippenStatus');
+      const list = document.getElementById('begrippenList');
+      const countEl = document.getElementById('begrippenCount');
+      const detailsEl = document.getElementById('begrippenDetails');
+      const quiz = document.getElementById('quiz');
+      const scoreEl = document.getElementById('score');
+      const resetBtn = document.getElementById('resetQuiz');
+      const url = '../data/hoofdstuk-' + chNum + '.xlsx';
+
+      // Start ingeklapt
+      detailsEl.removeAttribute('open');
+
+      // Score state
+      let score = 0, total = 0;
+      function updateScore(){ scoreEl.textContent = 'Score: ' + score + '/' + total; }
+
+      try {
+        const res = await fetch(url);
+        if(!res.ok) throw new Error('Bestand niet gevonden');
+        const buf = await res.arrayBuffer();
+        const workbook = XLSX.read(buf, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+        const items = rows
+          .filter(r => r['Begrip'] && r['Uitleg'])
+          .map(r => ({ begrip: r['Begrip'], uitleg: r['Uitleg'] }));
+
+        // Lijst
+        list.innerHTML = '';
+        items.forEach(it => {
+          const card = document.createElement('div');
+          card.className = 'p-4 rounded-xl border border-kevin-200 bg-white';
+          const title = document.createElement('div'); title.className='font-semibold text-kevin-900'; title.textContent = it.begrip;
+          const desc = document.createElement('div'); desc.className='text-kevin-800/80 text-sm mt-1'; desc.textContent = it.uitleg;
+          card.appendChild(title); card.appendChild(desc);
+          list.appendChild(card);
+        });
+        countEl.textContent = items.length;
+
+        // Quiz
+        quiz.innerHTML = '';
+        score = 0;
+        const n = Math.min(10, items.length);
+        total = n; updateScore();
+
+        function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+        const pool = shuffle(items.slice()).slice(0, n);
+
+        for (let i = 0; i < n; i++) {
+          const correct = pool[i];
+          const distractors = shuffle(items.filter(it => it !== correct)).slice(0,2).map(it => it.uitleg);
+          const options = shuffle([correct.uitleg, ...distractors]);
+
+          const div = document.createElement('div'); div.className='p-3 border rounded-lg bg-white';
+          const p = document.createElement('p'); p.className='text-sm sm:text-base'; p.textContent = (i+1) + '. Wat hoort bij "' + correct.begrip + '"?'; div.appendChild(p);
+          const fb = document.createElement('div'); fb.className='mt-1 text-xs'; div.appendChild(fb);
+
+          let counted = false;
+          options.forEach(opt => {
+            const label=document.createElement('label'); label.className='flex items-start gap-2 mt-1 text-sm sm:text-base';
+            const input=document.createElement('input'); input.type='radio'; input.name='q'+i; input.value=opt; input.className='mt-1 scale-110';
+            label.appendChild(input); label.appendChild(document.createTextNode(opt)); div.insertBefore(label, fb);
+
+            input.addEventListener('change', () => {
+              if (opt === correct.uitleg) {
+                fb.textContent='✅ Goed!'; fb.className='mt-1 text-xs text-green-700';
+                if (!counted) { score += 1; counted = true; updateScore(); }
+                div.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
+              } else {
+                fb.textContent='❌ Fout, probeer opnieuw.'; fb.className='mt-1 text-xs text-red-700';
+              }
+            });
+          });
+
+          quiz.appendChild(div);
+        }
+
+        resetBtn.onclick = function () {
+          // UX: terug naar begin van de begrippen-sectie en vervolgens reshuffle
+          const top = document.getElementById('begrippen').offsetTop;
+          window.scrollTo({ top, behavior: 'smooth' });
+          setTimeout(() => loadBegrippen(chNum), 200);
+        };
+
+        status.textContent = 'Ingeladen uit Excel (' + items.length + ' begrippen).';
+      } catch(err) {
+        status.textContent = 'Geen Excel gevonden voor dit hoofdstuk. (Zet een bestand in /data/hoofdstuk-__N__.xlsx met kolommen "Begrip" en "Uitleg".)';
+        list.innerHTML = '';
+        document.getElementById('begrippenCount').textContent = '0';
+        quiz.innerHTML = '';
+        score = 0; total = 0; updateScore();
+        resetBtn.onclick = function(){ loadBegrippen(chNum); };
+      }
+    }
+
+    loadBegrippen(11);
+  </script>
+</body>
+</html>
